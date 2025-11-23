@@ -1,12 +1,14 @@
 import { geoLocationManager } from '@kit.LocationKit';
 import { abilityAccessCtrl, common } from '@kit.AbilityKit';
 import { mapCommon } from '@kit.MapKit';
+import { UIContext } from '@kit.ArkUI';
 
 export class LocationService {
-  static async requestPermissions(): Promise<boolean> {
+  static async requestPermissions(uiContext: UIContext): Promise<boolean> {
+    const hostContext = uiContext.getHostContext() as common.UIAbilityContext;
     const atManager = abilityAccessCtrl.createAtManager();
     try {
-      const result = await atManager.requestPermissionsFromUser(getContext() as common.UIAbilityContext, [
+      const result = await atManager.requestPermissionsFromUser(hostContext, [
         'ohos.permission.LOCATION',
         'ohos.permission.APPROXIMATELY_LOCATION'
       ]);
@@ -17,15 +19,15 @@ export class LocationService {
     }
   }
 
-  static async getCurrentLocationSafe(): Promise<mapCommon.LatLng> {
+  static async getCurrentLocationSafe(uiContext: UIContext): Promise<mapCommon.LatLng> {
     const fallback: mapCommon.LatLng = {
       latitude: 41.02880769536224,
       longitude: 29.117448142218798
     };
 
-    const granted = LocationService.requestPermissions();
+    const granted = await LocationService.requestPermissions(uiContext);
     if (!granted) {
-      console.warn('loc permission rejected.');
+      console.warn('Location permission rejected.');
       return fallback;
     }
 
@@ -36,7 +38,7 @@ export class LocationService {
         longitude: location.longitude
       };
     } catch (error) {
-      console.error('location error:', error);
+      console.error('Location error:', error);
       return fallback;
     }
   }

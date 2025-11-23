@@ -1,20 +1,17 @@
 import { map, mapCommon, MapComponent } from '@kit.MapKit';
 import { LocationService } from '../services/LocationService';
-import { router } from '@kit.ArkUI';
 
-@Entry
 @Component
 export struct Location {
   private mapController?: map.MapComponentController;
   @State mapReady: boolean = false;
-
+  @Consume('NavPathStack') pageStack: NavPathStack;
   @State mapOptions: mapCommon.MapOptions = {
     position: {
       target: { latitude: 38.447967, longitude: 27.179380 },
       zoom: 13
     }
   };
-
   @State myLocationMarker: mapCommon.MarkerOptions = {
     position: { latitude: 38.447967, longitude: 27.179380 },
     title: 'Current loc',
@@ -25,7 +22,8 @@ export struct Location {
   };
 
   async aboutToAppear() {
-    const location = await LocationService.getCurrentLocationSafe();
+    const uiContext: UIContext = this.getUIContext();
+    const location = await LocationService.getCurrentLocationSafe(uiContext);
     this.mapOptions = {
       position: { target: location, zoom: 17 }
     };
@@ -36,38 +34,42 @@ export struct Location {
 
   build() {
     Flex({ direction: FlexDirection.Column }) {
-      Stack(){
-        if (this.mapReady) {
-          MapComponent({
-            mapOptions: this.mapOptions,
-            mapCallback: async (err, ctrl) => {
-              if (!err && ctrl) {
-                this.mapController = ctrl;
-                await Promise.resolve(ctrl.setMyLocationEnabled(true));
-                await Promise.resolve(ctrl.moveCamera({
-                  target: this.myLocationMarker.position,
-                  zoom: 17
-                }));
-                await ctrl.addMarker(this.myLocationMarker);
+      NavDestination() {
+        Stack() {
+          if (this.mapReady) {
+            MapComponent({
+              mapOptions: this.mapOptions,
+              mapCallback: async (err, ctrl) => {
+                if (!err && ctrl) {
+                  this.mapController = ctrl;
+                  await Promise.resolve(ctrl.setMyLocationEnabled(true));
+                  await Promise.resolve(ctrl.moveCamera({
+                    target: this.myLocationMarker.position,
+                    zoom: 17
+                  }));
+                  await ctrl.addMarker(this.myLocationMarker);
+                }
               }
-            }
-          })
-            .width('100%')
-            .height('100%');
-        } else {
-          Text('Map loading...').padding(20).fontSize(18);
+            })
+              .width('100%')
+              .height('100%');
+          } else {
+            Text('Map loading...').padding(20).fontSize(18);
+          }
+          Button('More Info')
+            .fontSize(12)
+            .backgroundColor(Color.Pink)
+            .fontColor(Color.Brown)
+            .margin({
+              top: 150
+            })
+            .onClick(() => {
+              this.pageStack.pushPathByName('TrackProgress', null);
+            })
         }
-        Button('More Info')
-          .fontSize(12)
-          .backgroundColor(Color.Pink)
-          .fontColor(Color.Brown)
-          .margin({
-          top: 150
-        })
-          .onClick(() => {
-            router.pushUrl({ url: 'pages/TrackProgress' });
-          })
       }
+      .hideTitleBar(true)
+      .hideBackButton(true)
       .backgroundColor(Color.White)
     }
   }

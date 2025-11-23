@@ -5,14 +5,13 @@ import {
   ArcButtonStatus,
   ArcButtonStyleMode,
   ColorMetrics,
-  router
 } from '@kit.ArkUI';
 import CalorieTracker from '../components/CalorieTracker';
 import HeartRateComponent from '../components/HeartRateComponent';
 
 @Entry
 @Component
-struct TrackProgress {
+export struct TrackProgress {
   textTimerController: TextTimerController = new TextTimerController()
   bottomOptions: ArcButtonOptions = new ArcButtonOptions({})
   @State format: string = 'mm:ss.SS'
@@ -31,34 +30,41 @@ struct TrackProgress {
   }
 
   build() {
-    Flex({ justifyContent: FlexAlign.Center, wrap: FlexWrap.Wrap, alignItems: ItemAlign.Center }) {
-      this.Timer()
-      Row() {
-        HeartRateComponent()
-        CalorieTracker()
-      }
-      Row({ space: 20 }) {
-        if (this.clicked) {
-          Image($r('app.media.pause')).fillColor(Color.Yellow).width('10%').onClick(() => {
-            this.textTimerController.pause()
+    NavDestination() {
+
+      Flex({ justifyContent: FlexAlign.Center, wrap: FlexWrap.Wrap, alignItems: ItemAlign.Center }) {
+        this.Timer()
+        Row() {
+          HeartRateComponent()
+          CalorieTracker()
+        }
+
+        Row({ space: 20 }) {
+          if (this.clicked) {
+            Image($r('app.media.pause')).fillColor(Color.Yellow).width('10%').onClick(() => {
+              this.textTimerController.pause()
+              this.clicked = false
+            })
+          } else {
+            Image($r('app.media.play')).fillColor(Color.Yellow).width('10%').onClick(() => {
+              this.textTimerController.start()
+              this.clicked = true
+            })
+          }
+          Image($r('app.media.reset')).fillColor(Color.Yellow).width('10%').onClick(() => {
+            this.textTimerController.reset()
             this.clicked = false
           })
-        } else {
-          Image($r('app.media.play')).fillColor(Color.Yellow).width('10%').onClick(() => {
-            this.textTimerController.start()
-            this.clicked = true
-          })
         }
-        Image($r('app.media.reset')).fillColor(Color.Yellow).width('10%').onClick(() => {
-          this.textTimerController.reset()
-          this.clicked = false
-        })
+
+        ArcButton({ options: this.bottomOptions }).margin({ top: 15 })
       }
-      ArcButton({ options: this.bottomOptions }).margin({ top: 15 })
+      .backgroundColor(Color.White)
+      .width('466px')
+      .height('466px')
     }
-    .backgroundColor(Color.White)
-    .width('466px')
-    .height('466px')
+    .hideTitleBar(true)
+    .hideBackButton(true)
   }
 
   @Builder

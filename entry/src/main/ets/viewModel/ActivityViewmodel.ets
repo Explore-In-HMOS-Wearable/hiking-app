@@ -26,6 +26,6 @@ class ActivityViewModel {
   }
 }
 
-let activityViewModel = new ActivityViewModel();
+const activityViewModel = new ActivityViewModel();
 
 export { activityViewModel as ActivityViewModel }

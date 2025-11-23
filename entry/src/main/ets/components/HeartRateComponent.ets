@@ -1,16 +1,31 @@
+import { cryptoFramework } from '@kit.CryptoArchitectureKit';
+
 @Component
 export default struct HeartRateComponent {
   @State heartRate: string = '--';
   private intervalId: number | undefined = undefined;
 
-  generateTwoDigitHeartRate(): string {
-    const randomNum = Math.floor(80 + Math.random() * 41);
-    return randomNum.toString();
+  async generateTwoDigitHeartRate(): Promise<string> {
+    try {
+      let rand = cryptoFramework.createRandom();
+      let seed = new Uint8Array([1, 2, 3]);
+      rand.setSeed({ data: seed });
+
+      let randOutput = await rand.generateRandom(1);
+      let byteVal = randOutput.data?.[0] ?? 0;
+
+      let heartRate = 80 + (byteVal % 41);
+      return heartRate.toString();
+    } catch (e) {
+      console.error('Heart rate generation failed:', e);
+      return this.heartRate;
+    }
   }
 
   aboutToAppear() {
-    this.intervalId = setInterval(() => {
-      this.heartRate = this.generateTwoDigitHeartRate();
+    this.intervalId = setInterval(async () => {
+      const newRate = await this.generateTwoDigitHeartRate();
+      this.heartRate = newRate;
     }, 2000);
   }
 

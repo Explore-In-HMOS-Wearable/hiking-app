@@ -1,7 +1,7 @@
 import { data, ActivityModel } from '../viewModel/ActivityModel'
-import { ArcList, router, ArcListItem, ComponentContent } from '@kit.ArkUI';
-import { ActivityViewModel } from '../viewModel/ActivityViewmodel';
-
+import { ArcList, ArcListItem, ComponentContent } from '@kit.ArkUI';
+import { Location } from './Location';
+import { TrackProgress } from './TrackProgress';
 
 @Builder
 function header() {
@@ -16,58 +16,75 @@ function header() {
 @Component
 export struct ActivityItem {
   @State isSelected: boolean = false;
-  private viewModel = ActivityViewModel;
   context: UIContext = this.getUIContext()
   header: ComponentContent<object> = new ComponentContent(this.context, wrapBuilder(header))
+  @Provide('NavPathStack') pageStack: NavPathStack = new NavPathStack()
+
+  @Builder
+  PagesMap(name: string) {
+    if (name === 'Location') {
+      Location()
+    } else if (name === 'TrackProgress') {
+      TrackProgress()
+    }
+  }
 
   build() {
-    Flex() {
-      Row() {
-        Column() {
-          ArcList({ header: this.header }) {
-            ForEach(data, (imageData: ActivityModel) => {
-              ArcListItem() {
-                Row() {
-                  Image(imageData.img)
-                    .width(40)
-                    .height(40)
-                    .objectFit(ImageFit.Contain)
-                    .fillColor(Color.Yellow)
-                    .padding({
-                      right:10
-                    })
-                    .onClick(() => {
-                      router.pushUrl({ url: 'pages/Location' });
-                    })
-                  Blank(3)
-                  Text(imageData.name.toString())
-                    .maxLines(2)
-                    .textOverflow({ overflow: TextOverflow.Ellipsis })
-                    .width('60%')
-                    .textAlign(TextAlign.Start)
-                    .fontSize(12)
-                    .fontColor(Color.Brown)
+    Navigation(this.pageStack) {
+      Flex() {
+        Row() {
+          Column() {
+            ArcList({ header: this.header }) {
+              ForEach(data, (imageData: ActivityModel) => {
+                ArcListItem() {
+                  Row() {
+                    Image(imageData.img)
+                      .width(40)
+                      .height(40)
+                      .objectFit(ImageFit.Contain)
+                      .fillColor(Color.Yellow)
+                      .padding({
+                        right: 10
+                      })
+                      .onClick(() => {
+                        this.pageStack.pushPathByName('Location', null);
+                      })
+                    Blank(3)
+                    Text(imageData.name.toString())
+                      .maxLines(2)
+                      .textOverflow({ overflow: TextOverflow.Ellipsis })
+                      .width('60%')
+                      .textAlign(TextAlign.Start)
+                      .fontSize(12)
+                      .fontColor(Color.Brown)
+                  }
+                  .backgroundColor(Color.Pink)
+                  .borderRadius(25)
+                  .margin(5)
+                  .width('85%')
+                  .padding({
+                    top: 3,
+                    bottom: 3,
+                    left: 4,
+                    right: 3
+                  })
+                  .onClick(() => {
+                    this.pageStack.pushPathByName('Location', null);
+                  })
                 }
-                .backgroundColor(Color.Pink)
-                .borderRadius(25)
-                .margin(5)
-                .width('85%')
-                .padding({
-                  top: 3,
-                  bottom: 3,
-                  left: 4,
-                  right: 3
-                })
-                .onClick(() => {
-                  router.pushUrl({ url: 'pages/Location' });
-                })
-              }
-            }, (item: string, index: number) => item)
+              }, (item: string, index: number) => item)
+            }
           }
         }
       }
-    }.width('100%')
+    }
+    .width('100%')
     .height('100%')
     .backgroundColor(Color.White)
+    .mode(NavigationMode.Stack)
+    .hideTitleBar(true)
+    .navDestination(this.PagesMap)
+    .hideBackButton(true)
+    .ignoreLayoutSafeArea()
   }
 }
