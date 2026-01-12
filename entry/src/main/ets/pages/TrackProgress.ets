@@ -4,7 +4,7 @@ import {
   ArcButtonPosition,
   ArcButtonStatus,
   ArcButtonStyleMode,
-  ColorMetrics,
+  ColorMetrics
 } from '@kit.ArkUI';
 import CalorieTracker from '../components/CalorieTracker';
 import HeartRateComponent from '../components/HeartRateComponent';
@@ -14,9 +14,9 @@ import HeartRateComponent from '../components/HeartRateComponent';
 export struct TrackProgress {
   textTimerController: TextTimerController = new TextTimerController()
   bottomOptions: ArcButtonOptions = new ArcButtonOptions({})
-  @State format: string = 'mm:ss.SS'
-  @State elapsedTime: number = 0
-  @State clicked: boolean = true
+  format: string = 'mm:ss.SS'
+  elapsedTime: number = 0
+  clicked: boolean = true
 
   aboutToAppear(): void {
     this.bottomOptions = new ArcButtonOptions({
@@ -25,7 +25,7 @@ export struct TrackProgress {
       status: ArcButtonStatus.NORMAL,
       backgroundColor: ColorMetrics.resourceColor(Color.Pink),
       styleMode: ArcButtonStyleMode.CUSTOM,
-      position: ArcButtonPosition.BOTTOM_EDGE,
+      position: ArcButtonPosition.BOTTOM_EDGE
     })
   }
 

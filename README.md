@@ -7,8 +7,8 @@ This mobile application provides users with an interactive way to track and mana
 # Preview
 
 <div>
-   <img src="./images/1.PNG" width="25%"/>
-   <img src="./images/2.PNG" width="25%"/>
+<img src="./screenshots/1.PNG" width="25%"/>
+<img src="./screenshots/2.PNG" width="25%"/>
 </div>
 
 # Use Cases
@@ -30,7 +30,7 @@ This mobile application provides users with an interactive way to track and mana
 - **Tools**: DevEco Studio Vers 5.1.0.842
 - **Libraries**: @kit.MapKit, @kit.ArkUI, @kit.LocationKit, @kit.AbilityKit
 
-# Project Directory
+# Directory Structure
    ```
    entry/src/main/ets/   
     ├── components

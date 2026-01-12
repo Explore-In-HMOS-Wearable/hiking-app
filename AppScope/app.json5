@@ -1,6 +1,6 @@
 {
   "app": {
-    "bundleName": "com.hmosdemos.hikingapp",
+    "bundleName": "com.hmosdemos.wearable.hiking_app",
     "vendor": "hmosdemos",
     "versionCode": 1000000,
     "versionName": "1.0.0",

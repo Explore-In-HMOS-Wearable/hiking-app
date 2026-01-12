@@ -14,7 +14,7 @@ const data: ActivityModel[] = [
   new ActivityModel(0, $r('app.media.running'), 'Running'),
   new ActivityModel(1, $r('app.media.trekking'), 'Trekking'),
   new ActivityModel(3, $r('app.media.cycling'), 'Cycling'),
-  new ActivityModel(4, $r('app.media.jogging'), 'Jogging'),
+  new ActivityModel(4, $r('app.media.jogging'), 'Jogging')
 
 ];
 
